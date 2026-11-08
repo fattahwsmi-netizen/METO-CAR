@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>METO CAR</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--tx:#1a1d21;--mut:#6b7280;--pri:#0f766e;--on:#fff;--bd:#e5e7eb;--ok:#15803d;--bad:#b91c1c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111418;--card:#1b2026;--tx:#eceff3;--mut:#9aa4b2;--pri:#2dd4bf;--on:#06201c;--bd:#2b323b;--ok:#4ade80;--bad:#f87171;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#111418;--card:#1b2026;--tx:#eceff3;--mut:#9aa4b2;--pri:#2dd4bf;--on:#06201c;--bd:#2b323b;--ok:#4ade80;--bad:#f87171;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Cairo,Tahoma,Arial,sans-serif;line-height:1.6}
+header{background:var(--pri);color:var(--on);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+header h1{margin:0;font-size:20px}
+nav button{background:transparent;color:var(--on);border:1px solid var(--on);border-radius:8px;padding:6px 14px;font:inherit;cursor:pointer;margin-inline-start:6px}
+nav button.a{background:var(--on);color:var(--pri)}
+main{max-width:960px;margin:0 auto;padding:16px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+input,select{font:inherit;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);min-width:0}
+.row input,.row select{flex:1 1 130px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px}
+.card h3{margin:0 0 4px;font-size:17px}
+.mut{color:var(--mut);font-size:14px}
+.pr{font-weight:700;color:var(--pri);font-size:18px}
+.btn{background:var(--pri);color:var(--on);border:0;border-radius:8px;padding:8px 14px;font:inherit;font-weight:700;cursor:pointer}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.s{background:transparent;color:var(--bad);border:1px solid var(--bad);padding:4px 10px;font-weight:400}
+.tag{display:inline-block;padding:2px 10px;border-radius:99px;font-size:13px;border:1px solid var(--bd)}
+.ok{color:var(--ok)}.bad{color:var(--bad)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.stats b{display:block;font-size:22px;color:var(--pri)}
+h2{font-size:18px;margin:20px 0 10px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal.show{display:flex}
+.modal .card{width:100%;max-width:400px}
+.modal input{width:100%;margin:6px 0}
+.scroll{overflow-x:auto}
+a{color:var(--pri)}header a{color:var(--on);font-weight:700;text-decoration:none}
+.img{width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:42px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🚗 METO CAR</h1>
+  <span><a href="tel:01285977851">📞 012-859-77851</a> • <a target="_blank" rel="noopener" href="https://wa.me/201285977851">واتساب</a></span>
+  <nav><button id="t-c" class="a" onclick="tab('c')">العملاء</button><button id="t-a" onclick="tab('a')">الإدارة</button></nav>
+</header>
+<main>
+  <section id="cust">
+    <div class="row">
+      <input id="q" placeholder="ابحث عن عربية..." oninput="rc()">
+      <input id="df" type="date" onchange="rc()" aria-label="من">
+      <input id="dt" type="date" onchange="rc()" aria-label="إلى">
+    </div>
+    <div id="cars" class="grid"></div>
+  </section>
+  <section id="admin" style="display:none"></section>
+</main>
+
+<div id="modal" class="modal"><div class="card" id="mbox"></div></div>
+
+<script>
+var K='carRentalApp',PIN='1234',ST=['جديد','مؤكد','مستلمة','مرتجعة','ملغي'];
+var seed={phone:'201285977851',cars:[
+ {id:1,name:'تويوتا كورولا',year:2022,type:'سيدان',price:800,off:false},
+ {id:2,name:'هيونداي إلنترا',year:2023,type:'سيدان',price:900,off:false},
+ {id:3,name:'كيا سبورتاج',year:2022,type:'SUV',price:1300,off:false},
+ {id:4,name:'فيات تيبو',year:2021,type:'اقتصادية',price:650,off:false},
+ {id:5,name:'نيسان صني',year:2021,type:'اقتصادية',price:600,off:false},
+ {id:6,name:'شيفروليه أوبترا',year:2020,type:'اقتصادية',price:550,off:false},
+ {id:7,name:'هيونداي توسان',year:2023,type:'SUV',price:1500,off:false},
+ {id:8,name:'ميتسوبيشي لانسر',year:2022,type:'سيدان',price:750,off:false}],bookings:[]};
+var S,unlocked=false,sel=null;
+try{S=JSON.parse(localStorage.getItem(K))}catch(e){S=null}
+if(!S||!S.cars)S=seed;
+if(!S.phone)S.phone='201285977851';
+function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function busy(b){return b.status!=='مرتجعة'&&b.status!=='ملغي'}
+function days(a,b){return Math.max(1,Math.round((new Date(b)-new Date(a))/864e5))}
+function iso(d){return d.toISOString().slice(0,10)}
+function free(id,f,t){return !S.bookings.some(function(b){return b.car===id&&busy(b)&&b.from<t&&f<b.to})}
+function carName(id){var c=S.cars.find(function(x){return x.id===id});return c?c.name:'(محذوفة)'}
+
+var t0=new Date();$('df').value=iso(t0);$('dt').value=iso(new Date(t0.getTime()+864e5));
+$('df').min=iso(t0);
+
+function tab(x){
+  $('cust').style.display=x==='c'?'':'none';$('admin').style.display=x==='a'?'':'none';
+  $('t-c').className=x==='c'?'a':'';$('t-a').className=x==='a'?'a':'';
+  if(x==='a')ra();else rc();
+}
+
+function rc(){
+  var f=$('df').value,t=$('dt').value,q=$('q').value.trim(),bad=!f||!t||t<=f;
+  var list=S.cars.filter(function(c){return !q||(c.name+c.type).indexOf(q)>-1});
+  if(!list.length){$('cars').innerHTML='<p class="mut">لا توجد عربيات.</p>';return}
+  $('cars').innerHTML=list.map(function(c){
+    var ok=!bad&&!c.off&&free(c.id,f,t),n=bad?1:days(f,t);
+    return '<div class="card">'+(c.img?'<img class="img" alt="" src="'+c.img+'">':'<div class="img">🚗</div>')+'<h3>'+esc(c.name)+'</h3><div class="mut">'+esc(c.type)+' • موديل '+c.year+'</div>'
+    +'<div class="pr">'+c.price+' ج.م / يوم</div>'
+    +'<div class="mut">'+(bad?'اختار تواريخ صحيحة':'الإجمالي لـ '+n+' يوم: '+c.price*n+' ج.م')+'</div>'
+    +'<p><span class="tag '+(ok?'ok':'bad')+'">'+(c.off?'في الصيانة':ok?'متاحة':'محجوزة')+'</span></p>'
+    +'<button class="btn" '+(ok?'':'disabled')+' onclick="book('+c.id+')">احجز</button></div>';
+  }).join('');
+}
+
+function book(id){
+  sel=id;var c=S.cars.find(function(x){return x.id===id}),f=$('df').value,t=$('dt').value,n=days(f,t);
+  $('mbox').innerHTML='<h3>حجز '+esc(c.name)+'</h3><div class="mut">من '+f+' إلى '+t+' ('+n+' يوم) — '+c.price*n+' ج.م</div>'
+  +'<input id="bn" placeholder="الاسم بالكامل"><input id="bp" type="tel" placeholder="رقم الموبايل">'
+  +'<div id="berr" class="bad"></div><div class="row"><button class="btn" onclick="confirmBook()">تأكيد الحجز</button><button class="btn s" onclick="closeM()">إلغاء</button></div>';
+  $('modal').className='modal show';
+}
+function closeM(){$('modal').className='modal'}
+function confirmBook(){
+  var n=$('bn').value.trim(),p=$('bp').value.trim(),f=$('df').value,t=$('dt').value,c=S.cars.find(function(x){return x.id===sel});
+  if(n.length<3||p.replace(/\D/g,'').length<10){$('berr').textContent='اكتب الاسم ورقم موبايل صحيح';return}
+  if(!free(sel,f,t)){$('berr').textContent='العربية اتحجزت في الفترة دي';return}
+  var total=c.price*days(f,t);
+  S.bookings.push({id:Date.now(),car:sel,name:n,phone:p,from:f,to:t,total:total,status:'جديد'});save();
+  var msg=encodeURIComponent('حجز جديد: '+c.name+' من '+f+' إلى '+t+' — '+n+' — '+p);
+  var wa=S.phone?'<p><a target="_blank" rel="noopener" href="https://wa.me/'+S.phone+'?text='+msg+'">أرسل تفاصيل الحجز واتساب</a></p>':'';
+  $('mbox').innerHTML='<h3 class="ok">تم تسجيل الحجز ✔</h3><p>هيتواصل معاك المكتب لتأكيد الحجز.</p>'+wa+'<button class="btn" onclick="closeM();rc()">تمام</button>';
+}
+
+function ra(){
+  var A=$('admin');
+  if(!unlocked){
+    A.innerHTML='<div class="card" style="max-width:320px"><h3>دخول الإدارة</h3><input id="pin" type="password" placeholder="الرقم السري"><p id="perr" class="bad"></p><button class="btn" onclick="login()">دخول</button></div>';return;
+  }
+  var act=S.bookings.filter(busy).length,
+  rev=S.bookings.filter(function(b){return b.status==='مستلمة'||b.status==='مرتجعة'}).reduce(function(a,b){return a+b.total},0),
+  tdy=iso(new Date()),out=S.bookings.filter(function(b){return b.status==='مستلمة'}).length;
+  A.innerHTML='<div class="stats">'
+  +'<div class="card"><b>'+S.cars.length+'</b>عربية</div><div class="card"><b>'+out+'</b>خارج المكتب</div>'
+  +'<div class="card"><b>'+act+'</b>حجوزات نشطة</div><div class="card"><b>'+rev+'</b>إيراد (ج.م)</div></div>'
+  +'<h2>الحجوزات</h2><div class="row"><input id="mn" placeholder="اسم العميل"><input id="mp" type="tel" placeholder="الموبايل"><select id="mc">'+S.cars.map(function(c){return '<option value="'+c.id+'">'+esc(c.name)+'</option>'}).join('')+'</select><input id="mf" type="date" aria-label="من"><input id="mt" type="date" aria-label="إلى"><button class="btn" onclick="addB()">إضافة حجز يدوي</button></div><div id="merr" class="bad"></div>'+(S.bookings.length?'<div class="grid">'+S.bookings.slice().reverse().map(function(b){
+    return '<div class="card"><b>'+esc(b.name)+'</b> <span class="mut">'+esc(b.phone)+'</span><div>'+esc(carName(b.car))+'</div>'
+    +'<div class="mut">'+b.from+' ← '+b.to+' • '+b.total+' ج.م</div><div class="row" style="margin:8px 0 0"><select onchange="setSt('+b.id+',this.value)">'
+    +ST.map(function(s){return '<option'+(s===b.status?' selected':'')+'>'+s+'</option>'}).join('')+'</select>'
+    +'<button class="btn s" onclick="delB('+b.id+')">حذف</button></div></div>'}).join('')+'</div>':'<p class="mut">لا توجد حجوزات بعد.</p>')
+  +'<h2>العربيات</h2><div class="row"><input id="cn" placeholder="اسم العربية"><input id="cy" type="number" placeholder="الموديل"><input id="ct" placeholder="النوع (سيدان/SUV)"><input id="cp" type="number" placeholder="السعر/يوم"><button class="btn" onclick="addCar()">إضافة</button></div>'
+  +'<div class="scroll">'+S.cars.map(function(c){
+    return '<div class="card" style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span>'+(c.img?'<img src="'+c.img+'" alt="" style="width:48px;height:36px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-inline-end:8px">':'')+'<b>'+esc(c.name)+'</b> <span class="mut">'+c.year+' • '+esc(c.type)+' • '+c.price+' ج.م</span></span>'
+    +'<span><label class="btn s" style="color:var(--tx);border-color:var(--bd);cursor:pointer;display:inline-block">📷 '+(c.img?'تغيير الصورة':'رفع صورة')+'<input type="file" accept="image/*" hidden onchange="upImg('+c.id+',this)"></label> <button class="btn s" style="color:var(--tx);border-color:var(--bd)" onclick="togOff('+c.id+')">'+(c.off?'رجوع للخدمة':'صيانة')+'</button> <button class="btn s" onclick="delC('+c.id+')">حذف</button></span></div>'}).join('')+'</div>'
+  +'<h2>إعدادات</h2><div class="row"><input id="ph" value="'+esc(S.phone)+'" placeholder="واتساب المكتب بكود الدولة (2010xxxxxxxx)"><button class="btn" onclick="setPh()">حفظ</button></div>'
+  +'<p class="mut">البيانات محفوظة في المتصفح ده فقط.</p>';
+}
+function upImg(id,inp){
+  var f=inp.files&&inp.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){var im=new Image();im.onload=function(){
+    var w=Math.min(640,im.width),h=Math.round(im.height*w/im.width),cv=document.createElement('canvas');
+    cv.width=w;cv.height=h;cv.getContext('2d').drawImage(im,0,0,w,h);
+    var d=cv.toDataURL('image/jpeg',0.72);
+    S.cars.forEach(function(c){if(c.id===id)c.img=d});save();ra();
+  };im.src=r.result};
+  r.readAsDataURL(f);
+}
+function addB(){
+  var n=$('mn').value.trim(),p=$('mp').value.trim(),id=+$('mc').value,f=$('mf').value,t=$('mt').value,c=S.cars.find(function(x){return x.id===id});
+  if(!n||!c||!f||!t||t<=f){$('merr').textContent='اكمل الاسم والعربية والتواريخ';return}
+  if(!free(id,f,t)){$('merr').textContent='العربية محجوزة في الفترة دي';return}
+  S.bookings.push({id:Date.now(),car:id,name:n,phone:p,from:f,to:t,total:c.price*days(f,t),status:'مؤكد'});save();ra();
+}
+function login(){if($('pin').value===PIN){unlocked=true;ra()}else $('perr').textContent='الرقم السري غلط'}
+function setSt(id,v){S.bookings.forEach(function(b){if(b.id===id)b.status=v});save();ra()}
+function delB(id){S.bookings=S.bookings.filter(function(b){return b.id!==id});save();ra()}
+function togOff(id){S.cars.forEach(function(c){if(c.id===id)c.off=!c.off});save();ra()}
+function delC(id){S.cars=S.cars.filter(function(c){return c.id!==id});save();ra()}
+function addCar(){
+  var n=$('cn').value.trim(),p=+$('cp').value;if(!n||!p)return;
+  S.cars.push({id:Date.now(),name:n,year:+$('cy').value||'',type:$('ct').value.trim()||'—',price:p,off:false});save();ra();
+}
+function setPh(){S.phone=$('ph').value.replace(/\D/g,'');save();ra()}
+rc();
+</script>
+</body>
+</html>
