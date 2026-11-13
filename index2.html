@@ -2,145 +2,168 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>يوميات عيلة محمد</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #FF7A59;
             --secondary: #FFB84C;
             --bg-warm: #FFF8EE;
-            --card-bg: #FFFFFF;
             --text-dark: #2D3142;
-            --accent-blue: #4EA8DE;
-            --accent-green: #52B788;
-            --accent-pink: #F72585;
-            --accent-purple: #7209B7;
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background: linear-gradient(135deg, #FFECD2 0%, #FCB69F 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
+        .game-container { width: 100%; max-width: 480px; background: var(--bg-warm); border-radius: 28px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); border: 5px solid #FFFFFF; overflow: hidden; }
+        .splash-screen { padding: 30px 20px; text-align: center; }
+        .app-icon { width: 110px; height: 110px; margin: 0 auto 15px; background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%); border-radius: 28px; display: flex; align-items: center; justify-content: center; font-size: 52px;position: relative; border: 4px solid #FFF;}
+        .app-icon::after { content: "🏠"; position: absolute; bottom: -8px; right: -8px; font-size: 28px; background: #FFF; border-radius: 50%; padding: 3px; }
+        h1 { font-size: 28px; color: var(--primary); margin-bottom: 8px; }
+        .subtitle { font-size: 15px; color: #5C6274; margin-bottom: 20px; }
+        .living-room-scene { background: #FFF; border-radius: 20px; padding: 15px; margin-bottom: 20px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px; }
+        .char-badge { display: flex; flex-direction: column; align-items: center; font-size: 12px; font-weight: 700; }
+        .char-avatar { width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; margin-bottom: 4px; border: 3px solid #FFF; }
+        .btn-start { background: linear-gradient(180deg, #FF8C69 0%, #FF6B4A 100%); color: white; border: none; padding: 15px 40px; font-size: 20px; font-weight: 900; border-radius: 50px; cursor: pointer; width: 100%; box-shadow: 0 6px 0 #D94E34; }
+        .play-screen { display: none; flex-direction: column; }
+        .top-bar { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; font-weight: 900; }
+        .stat-pill { background: rgba(255,255,255,0.25); padding: 6px 14px; border-radius: 20px; }
+        .story-area { padding: 20px; }
+        .scene-card { background: white; border-radius: 22px; padding: 20px; margin-bottom: 18px; border: 2px solid #FFE5D9; text-align: center; }
+        .scene-emoji { font-size: 55px; margin-bottom: 10px; display: block; }
+        .scene-title { font-size: 19px; font-weight: 900; color: var(--primary); margin-bottom: 8px; }
+        .scene-desc { font-size: 15px; line-height: 1.6; color: #4A4E69; margin-bottom: 15px;}
+        .choices-list { display: flex; flex-direction: column; gap: 12px; }
+        .choice-btn { background: white; border: 3px solid var(--secondary); border-radius: 18px; padding: 14px 16px; text-align: right; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; box-shadow: 0 4px 0 #E59838; }
+        .feedback-toast { background: #E8F5E9; border: 2px solid #4CAF50; color: #2E7D32; padding: 12px; border-radius: 15px; margin-bottom: 15px; font-weight: 700; text-align: center; display: none; }
+        footer { width: 100%; max-width: 480px; background: rgba(255, 255, 255, 0.92); border-radius: 20px; padding: 14px; text-align: center; font-size: 12px; color: #333; margin-top: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .copyright { font-weight: 900; color: var(--text-dark); margin-bottom: 4px; }
+        .phone-number { font-weight: 900; color: var(--primary); font-size: 14px; direction: ltr; margin-bottom: 6px; display: inline-block; }
+        .promo-text { background: #FFF3E0; color: #D94E34; padding: 6px 10px; border-radius: 10px; font-weight: 700; border: 1px dashed var(--primary); }
+    </style>
+</head>
+<body>
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Cairo', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+    <div class="game-container">
+        <div class="splash-screen" id="splashScreen">
+            <div class="app-icon">👨‍👩‍👧‍👧</div>
+            <h1>يوميات عيلة محمد</h1>
+            <p class="subtitle">مغامرات البيت، السعي، وأنشطة البنات اليومية!</p>
+            <div class="living-room-scene">
+                <div class="char-badge"><div class="char-avatar" style="background:#D0EBFF;">👨🏻</div><span>محمد</span></div>
+                <div class="char-badge"><div class="char-avatar" style="background:#FFD6E0;">👩🏻</div><span>شيرين</span></div>
+                <div class="char-badge"><div class="char-avatar" style="background:#E5DBFF;">👧🏻</div><span>لوجي (16)</span></div>
+                <div class="char-badge"><div class="char-avatar" style="background:#D3F9D8;">👧🏻</div><span>نانا (14)</span></div>
+                <div class="char-badge"><div class="char-avatar" style="background:#FFF3BF;">🧒🏻</div><span>كارما (9)</span></div>
+            </div>
+            <button class="btn-start" onclick="startGame()">ابدأ اليوم الآن 🚀</button>
+        </div>
+
+        <div class="play-screen" id="playScreen">
+            <div class="top-bar">
+                <div class="stat-pill">💰 الميزانية: <span id="budgetVal">1000</span> ج</div>
+                <div class="stat-pill">❤️ سعادة العيلة: <span id="happyVal">80</span>%</div>
+            </div>
+            <div class="story-area">
+                <div class="feedback-toast" id="feedbackToast"></div>
+                <div class="scene-card">
+                    <span class="scene-emoji" id="sceneEmoji">🏍️</span>
+                    <div class="scene-title" id="sceneTitle">صباح السعي والنشاط</div>
+                    <div class="scene-desc" id="sceneDesc">بدأت يومك بنشاط عشان تأمّن ميزانية البيت.</div>
+                </div>
+                <div class="choices-list" id="choicesList"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="copyright">جميع حقوق الملكية محفوظة باسم محمد عبد الفتاح</div>
+        <div class="phone-number">📞 01151495701</div>
+        <div class="promo-text">✨ لو حابب أعملك لعبة خاصة لأسرتك أو أولادك بالشكل ده، كلمني فوراً! ✨</div>
+    </footer>
+
+    <script>
+        let budget = 1000, happiness = 80, currentStep = 0;
+        const scenes = [
+            {
+                emoji: "💼", title: "مرحلة السعي وتأمين الميزانية", desc: "نزلت تخلص شغلك لتأمين ميزانية البيت:",
+                choices: [
+                    { text: "صفقة شغل سريعة (+1500 جنيه)", budgetChange: 1500, happyChange: 5, msg: "رجعت ومعاك مبلغ محترم!" },
+                    { text: "مشاوير هادئة (+800 جنيه وترجع بدري)", budgetChange: 800, happyChange: 10, msg: "رجعت بدري والعيلة مبسوطة." }
+                ]
+            },
+            {
+                emoji: "🍲", title: "العودة للبيت", desc: "شيرين بتجهز الغدا وبتسألك على ميزانية البيت:",
+                choices: [
+                    { text: "تسلمها المصروف وتساعدها", budgetChange: -700, happyChange: 15, msg: "شيرين فرحت جداً بتقديرك!" },
+                    { text: "تديها جزء وتخلي الباقي طوارئ", budgetChange: -400, happyChange: 8, msg: "تفكير عملي كالعادة." }
+                ]
+            },
+            {
+                emoji: "📚", title: "نشاط لوجي (16 سنة)", desc: "لوجي محتاجة كورس لمذاكرة الثانوية:",
+                choices: [
+                    { text: "تشترك لها في الكورس (-300 ج)", budgetChange: -300, happyChange: 12, msg: "لوجي اتحمست جداً!" },
+                    { text: "تنظم معاها جدول وتوفر باقة (-150 ج)", budgetChange: -150, happyChange: 10, msg: "لوجي مبسوطة بتركيزك معاها." }
+                ]
+            },
+            {
+                emoji: "🎨", title: "نشاط نانا (14 سنة)", desc: "نانا مهتمة بالرسم والخروج مع صحابها:",
+                choices: [
+                    { text: "تجيب لها أدوات رسم جديدة (-200 ج)", budgetChange: -200, happyChange: 12, msg: "نانا طارت من الفرحة!" },
+                    { text: "توافق تخرج النادي مع صحابها (-150 ج)", budgetChange: -150, happyChange: 10, msg: "نانا اتبسطت بالتغيير." }
+                ]
+            },
+            {
+                emoji: "🧸", title: "مفاجأة كارما (9 سنين)", desc: "كارما مستنياك تجيب لها حاجة حلوة:",
+                choices: [
+                    { text: "لعبة ذكاء وحلويات وتقعد تلعب معاها (-150 ج)", budgetChange: -150, happyChange: 15, msg: "كارما ضحكتها ملت البيت!" },
+                    { text: "فسحة بالموتوسيكل وآيس كريم (-80 ج)", budgetChange: -80, happyChange: 15, msg: "أحلى فسحة لكارما!" }
+                ]
+            }
+        ];
+        function updateStats() {
+            document.getElementById('budgetVal').innerText = budget;
+            if (happiness > 100) happiness = 100;
+            if (happiness < 0) happiness = 0;
+            document.getElementById('happyVal').innerText = happiness;
         }
-
-        body {
-            background: linear-gradient(135deg, #FFECD2 0%, #FCB69F 100%);
-            color: var(--text-dark);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px;
+        function startGame() {
+            budget = 1000; happiness = 80; currentStep = 0;
+            updateStats();
+            document.getElementById('splashScreen').style.display = 'none';
+            document.getElementById('playScreen').style.display = 'flex';
+            document.getElementById('feedbackToast').style.display = 'none';
+            renderScene();
         }
-
-        .game-container {
-            width: 100%;
-            max-width: 480px;
-            background: var(--bg-warm);
-            border-radius: 28px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-            border: 5px solid #FFFFFF;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 15px;
+        function renderScene() {
+            if (currentStep >= scenes.length) { showEnding(); return; }
+            const scene = scenes[currentStep];
+            document.getElementById('sceneEmoji').innerText = scene.emoji;
+            document.getElementById('sceneTitle').innerText = scene.title;
+            document.getElementById('sceneDesc').innerText = scene.desc;
+            const choicesList = document.getElementById('choicesList');
+            choicesList.innerHTML = '';
+            scene.choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.innerHTML = `<span>${choice.text}</span> <span>👈</span>`;
+                btn.onclick = () => handleChoice(choice);
+                choicesList.appendChild(btn);
+            });
         }
-
-        /* شاشة البداية */
-        .splash-screen {
-            padding: 30px 20px;
-            text-align: center;
-            background: radial-gradient(circle at top, #FFF3E0, #FFE0B2);
+        function handleChoice(choice) {
+            budget += choice.budgetChange; happiness += choice.happyChange;
+            updateStats();
+            const toast = document.getElementById('feedbackToast');
+            toast.innerText = choice.msg; toast.style.display = 'block';
+            currentStep++; renderScene();
         }
-
-        .app-icon {
-            width: 110px;
-            height: 110px;
-            margin: 0 auto 15px;
-            background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 99%, #FECFEF 100%);
-            border-radius: 28px;
-            border: 4px solid #FFF;
-            box-shadow: 0 8px 20px rgba(255, 122, 89, 0.35);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 52px;
-            position: relative;
+        function showEnding() {
+            document.getElementById('sceneEmoji').innerText = "🏆";
+            document.getElementById('sceneTitle').innerText = "يوم عائلي ناجح!";
+            document.getElementById('sceneDesc').innerText = `عاش يا بطل! وفرت ميزانية (${budget} جنيه)، ووصلت سعادة العيلة لـ ${happiness}%!`;
+            const choicesList = document.getElementById('choicesList');
+            choicesList.innerHTML = `<button class="btn-start" onclick="startGame()">العب يوم جديد 🔄</button>`;
         }
+    </script>
+</body>
+</html>
 
-        .app-icon::after {
-            content: "🏠";
-            position: absolute;
-            bottom: -8px;
-            right: -8px;
-            font-size: 28px;
-            background: #FFF;
-            border-radius: 50%;
-            padding: 3px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-        }
-
-        h1 {
-            font-size: 28px;
-            font-weight: 900;
-            color: var(--primary);
-            text-shadow: 2px 2px 0px #FFF;
-            margin-bottom: 8px;
-        }
-
-        .subtitle {
-            font-size: 15px;
-            color: #5C6274;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-
-        .living-room-scene {
-            background: #FFF;
-            border-radius: 20px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 3px dashed var(--secondary);
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .char-badge {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .char-avatar {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            margin-bottom: 4px;
-            border: 3px solid #FFF;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .btn-start {
-            background: linear-gradient(180deg, #FF8C69 0%, #FF6B4A 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 20px;
-            font-weight: 900;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 6px 0 #D94E34, 0 12px 20px rgba(255, 107, 74, 0.4);
-            transition: transform 0
-            
