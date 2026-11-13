@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة المستشفى الذكي</title>
+    <title>نظام إدارة المستشفى الشامل</title>
     <style>
         :root {
-            --primary-color: #0f4c81;
-            --secondary-color: #17a2b8;
-            --bg-color: #f4f7f6;
-            --text-color: #333;
+            --primary-color: #1a365df80;
+            --bg-color: #f7fafc;
+            --text-color: #2d3748;
             --white: #ffffff;
+            --border-color: #e2e8f0;
         }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
@@ -22,70 +23,166 @@
             flex-direction: column;
             min-height: 100vh;
         }
+
         header {
             background-color: var(--primary-color);
             color: var(--white);
-            padding: 1rem;
+            padding: 1.5rem;
             text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+
+        .dashboard-nav {
+            background-color: var(--white);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-weight: bold;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .nav-btn:hover {
+            text-decoration: underline;
+        }
+
         .container {
             flex: 1;
             padding: 20px;
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             width: 100%;
             box-sizing: border-box;
         }
-        .card {
+
+        .section-card {
             background: var(--white);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: none;
         }
+
+        .section-card.active {
+            display: block;
+        }
+
         h2 {
             color: var(--primary-color);
+            margin-top: 0;
             border-bottom: 2px solid var(--secondary-color);
             padding-bottom: 10px;
         }
-        .form-group {
-            margin-bottom: 15px;
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
         }
+
+        .stat-card {
+            background: #ebf8ff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #bee3f8;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
+
         input[type="text"], input[type="email"], input[type="date"], select, textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
             box-sizing: border-box;
+            font-size: 16px;
         }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(66,153,225,0.2);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            padding: 10px 0;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+
         .btn {
-            display: inline-block;
             background-color: var(--secondary-color);
             color: var(--white);
-            padding: 12px 20px;
+            padding: 15px 30px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
-            text-align: center;
-            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
             width: 100%;
+            transition: background-color 0.2s;
         }
+
         .btn:hover {
-            background-color: #138496;
+            background-color: #2b6cb0;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            text-align: right;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #edf2f7;
+        }
+
         footer {
-            background-color: #333;
+            background-color: #2d3748;
             color: var(--white);
             text-align: center;
-            padding: 10px;
-            font-size: 14px;
+            padding: 15px;
+            font-size: 16px;
             margin-top: auto;
         }
     </style>
@@ -93,21 +190,62 @@
 <body>
 
 <header>
-    <h1>مستشفى العناية بالصحة</h1>
+    <h1>نظام إدارة المستشفى الذكي</h1>
 </header>
 
+<nav class="dashboard-nav">
+    <button class="nav-btn" onclick="showSection('dashboard')">لوحة التحكم</button>
+    <button class="nav-btn" onclick="showSection('registration')">تسجيل مريض</button>
+    <button class="nav-btn" onclick="showSection('patients-list')">سجل المرضى</button>
+</nav>
+
 <div class="container">
-    <!-- واجهة الاستقبال -->
-    <div class="card">
+    <!-- 1. لوحة التحكم -->
+    <div id="dashboard" class="section-card active">
         <h2>لوحة تحكم الاستقبال</h2>
-        <p>مرحباً بك، يمكنك إدارة طوابير الانتظار وتسجيل الحالات الطارئة من هنا.</p>
-        <button class="btn" onclick="document.getElementById('registration-section').scrollIntoView();">انتقل لتسجيل مريض جديد</button>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div>إجمالي المرضى اليوم</div>
+                <div class="stat-number">42</div>
+            </div>
+            <div class="stat-card">
+                <div>حالات الطارئة</div>
+                <div class="stat-number" style="color: #e53e3e;">5</div>
+            </div>
+            <div class="stat-card">
+                <div>أسرّة العناية المتاحة</div>
+                <div class="stat-number" style="color: #38a169;">12</div>
+            </div>
+        </div>
+        <h3>آخر التحديثات</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>اسم المريض</th>
+                    <th>الحالة</th>
+                    <th>الوقت</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>أحمد محمود</td>
+                    <td>تم قبوله‌ (طوارئ)</td>
+                    <td>16:30</td>
+                </tr>
+                <tr>
+                    <td>سارة علي</td>
+                    <td>خروج</td>
+                    <td>16:15</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
-    <!-- نموذج تسجيل المرضى -->
-    <div class="card" id="registration-section">
-        <h2>تسجيل مريض جديد</h2>
-        <form>
+    <!-- 2. نموذج تسجيل المرضى الكامل -->
+    <div id="registration" class="section-card">
+        <h2>سجل مريض جديد</h2>
+        <form id="patientForm" onsubmit="handleFormSubmit(event)">
+            <h3>1. البيانات الشخصية</h3>
             <div class="form-group">
                 <label for="full-name">الاسم الكامل:</label>
                 <input type="text" id="full-name" required>
@@ -117,6 +255,15 @@
                 <input type="date" id="dob" required>
             </div>
             <div class="form-group">
+                <label>الجنس:</label>
+                <div class="radio-group">
+                    <label class="radio-option"><input type="radio" name="gender" value="male" required> ذكر</label>
+                    <label class="radio-option"><input type="radio" name="gender" value="female"> أنثى</label>
+                </div>
+            </div>
+
+            <h3>2. معلومات الاتصال</h3>
+            <div class="form-group">
                 <label for="phone">رقم الهاتف:</label>
                 <input type="text" id="phone" required>
             </div>
@@ -124,26 +271,95 @@
                 <label for="email">البريد الإلكتروني:</label>
                 <input type="email" id="email">
             </div>
+
+            <h3>3. التاريخ الطبي</h3>
             <div class="form-group">
-                <label for="medical-history">التاريخ الطبي:</label>
-                <textarea id="medical-history" rows="3" placeholder="الأمراض المزمنة، الحساسية..."></textarea>
+                <label for="medical-history">التاريخ الطبي والأمراض المزمنة:</label>
+                <textarea id="medical-history" rows="4" placeholder="اكتب التفاصيل..."></textarea>
             </div>
+
+            <h3>4. تفاصيل الدخول والحجز</h3>
             <div class="form-group">
-                <label for="appointment-type">نوع الموعد:</label>
-                <select id="appointment-type">
-                    <option value="consultation">استشارة</option>
-                    <option value="follow-up">متابعة</option>
-                    <option value="emergency">طوارئ</option>
+                <label>نوع الحالة/الموعد:</label>
+                <div class="radio-group">
+                    <label class="radio-option"><input type="radio" name="admission-type" value="consultation" checked> استشارة</label>
+                    <label class="radio-option"><input type="radio" name="admission-type" value="emergency"> طوارئ</label>
+                    <label class="radio-option"><input type="radio" name="admission-type" value="inpatient"> حجز داخلي</label>
+                </div>
+            </div>
+            <div class="form-group" id="dept-group">
+                <label for="department">القسم:</label>
+                <select id="department">
+                    <option value="general">عام</option>
+                    <option value="cardio">قلبية</option>
+                    <option value="icu">عناية مركزة</option>
                 </select>
             </div>
-            <button type="submit" class="btn">تأكيد التسجيل</button>
+
+            <button type="submit" class="btn">تأكيد التسجيل وحجز الحالة</button>
         </form>
+    </div>
+
+    <!-- 3. سجل المرضى -->
+    <div id="patients-list" class="section-card">
+        <h2>سجل المرضى النشطين</h2>
+        <input type="text" placeholder="ابحث عن مريض بالاسم أو الرقم..." style="margin-bottom: 20px;">
+        <table id="patientsTable">
+            <thead>
+                <tr>
+                    <th>م</th>
+                    <th>الاسم</th>
+                    <th>القسم</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>محمد عبد الفتاح</td>
+                    <td>طوارئ</td>
+                    <td>تحت الإجراء</td>
+                    <td><button onclick="alert('جارٍ فتح الملف الطبي...')">عرض الملف</button></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
 <footer>
-    حقوق الملكية الفكرية محفوظة © م/ محمد عبد الفتاح محمد
+    حقوق الملكية الفكرية محفوظة © Fattah 2026
 </footer>
+
+<script>
+    function showSection(sectionId) {
+        document.querySelectorAll('.section-card').forEach(card => {
+            card.classList.remove('active');
+        });
+        document.getElementById(sectionId).classList.add('active');
+    }
+
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        const name = document.getElementById('full-name').value;
+        const dept = document.getElementById('department').value;
+        
+        // Add to table dynamically
+        const table = document.getElementById('patientsTable').getElementsByTagName('tbody')[0];
+        const newRow = table.insertRow();
+        newRow.innerHTML = `
+            <td>${table.rows.length}</td>
+            <td>${name}</td>
+            <td>${dept}</td>
+            <td>تم الحجز</td>
+            <td><button onclick="alert('جارٍ فتح الملف الطبي...')">عرض الملف</button></td>
+        `;
+        
+        alert('تم تسجيل المريض بنجاح وتحديث النظام.');
+        document.getElementById('patientForm').reset();
+        showSection('patients-list');
+    }
+</script>
 
 </body>
 </html>
