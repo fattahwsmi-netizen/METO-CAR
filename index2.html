@@ -1,81 +1,150 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تطبيق تفاعلي مطور</title>
-<script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المستشفى الذكي</title>
+    <style>
+        :root {
+            --primary-color: #0f4c81;
+            --secondary-color: #17a2b8;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --white: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .container {
+            flex: 1;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="email"], input[type="date"], select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            width: 100%;
+        }
+        .btn:hover {
+            background-color: #138496;
+        }
+        footer {
+            background-color: #333;
+            color: var(--white);
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            margin-top: auto;
+        }
+    </style>
 </head>
-<body class="bg-slate-100 font-sans min-h-screen flex flex-col justify-between">
-<header class="bg-indigo-600 text-white shadow-md py-4 px-6">
-<div class="max-w-4xl mx-auto flex justify-between items-center">
-<h1 class="text-xl font-bold">لوحة التحكم الذكية</h1>
-<span class="text-xs bg-indigo-500 px-3 py-1 rounded-full">نسخة تفاعلية</span>
-</div>
+<body>
+
+<header>
+    <h1>مستشفى العناية بالصحة</h1>
 </header>
-​<main class="max-w-4xl mx-auto p-6 flex-grow w-full">
-<!-- Stats Section -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-<h3 class="text-slate-500 text-sm font-medium">إجمالي الطلبات</h3>
-<p id="stat-orders" class="text-3xl font-bold text-indigo-600 mt-2">1,240</p>
+
+<div class="container">
+    <!-- واجهة الاستقبال -->
+    <div class="card">
+        <h2>لوحة تحكم الاستقبال</h2>
+        <p>مرحباً بك، يمكنك إدارة طوابير الانتظار وتسجيل الحالات الطارئة من هنا.</p>
+        <button class="btn" onclick="document.getElementById('registration-section').scrollIntoView();">انتقل لتسجيل مريض جديد</button>
+    </div>
+
+    <!-- نموذج تسجيل المرضى -->
+    <div class="card" id="registration-section">
+        <h2>تسجيل مريض جديد</h2>
+        <form>
+            <div class="form-group">
+                <label for="full-name">الاسم الكامل:</label>
+                <input type="text" id="full-name" required>
+            </div>
+            <div class="form-group">
+                <label for="dob">تاريخ الميلاد:</label>
+                <input type="date" id="dob" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">رقم الهاتف:</label>
+                <input type="text" id="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="email">البريد الإلكتروني:</label>
+                <input type="email" id="email">
+            </div>
+            <div class="form-group">
+                <label for="medical-history">التاريخ الطبي:</label>
+                <textarea id="medical-history" rows="3" placeholder="الأمراض المزمنة، الحساسية..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="appointment-type">نوع الموعد:</label>
+                <select id="appointment-type">
+                    <option value="consultation">استشارة</option>
+                    <option value="follow-up">متابعة</option>
+                    <option value="emergency">طوارئ</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">تأكيد التسجيل</button>
+        </form>
+    </div>
 </div>
-<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-<h3 class="text-slate-500 text-sm font-medium">المستخدمون النشطون</h3>
-<p id="stat-users" class="text-3xl font-bold text-emerald-600 mt-2">342</p>
-</div>
-<div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-<h3 class="text-slate-500 text-sm font-medium">نسبة الأداء</h3>
-<p id="stat-performance" class="text-3xl font-bold text-amber-600 mt-2">98.5%</p>
-</div>
-</div>
-​<!-- Action Card -->
-<div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6 text-center">
-<h2 class="text-2xl font-bold text-slate-800 mb-2">تحديث بيانات النظام</h2>
-<p class="text-slate-600 mb-6">اضغط أدناه لمحاكاة جلب أحدث البيانات وتحديث الإحصائيات.</p>
-​<button onclick="triggerAction()" id="action-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-8 rounded-lg transition inline-flex items-center">
-<!-- Spinner (Initially Hidden) -->
-<svg id="spinner" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-</svg>
-<span id="btn-text">تحديث البيانات الآن</span>
-</button>
-</div>
-​<!-- Feedback Alert -->
-<div id="output" class="hidden bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-lg text-center animate-bounce">
-تم جلب وتحديث البيانات بنجاح!
-</div>
-</main>
-​<footer class="bg-white border-t border-slate-200 py-4 px-6 text-center text-slate-500 text-sm">
-جميع الحقوق محفوظة © 2026
+
+<footer>
+    حقوق الملكية الفكرية محفوظة © م/ محمد عبد الفتاح محمد
 </footer>
-​<script>
-function triggerAction() {
-const btn = document.getElementById('action-btn');
-const btnText = document.getElementById('btn-text');
-const spinner = document.getElementById('spinner');
-const output = document.getElementById('output');
-​// Reset state
-output.classList.add('hidden');
-btn.disabled = true;
-btn.classList.add('opacity-75');
-spinner.classList.remove('hidden');
-btnText.innerText = "جاري المعالجة...";
-​// Simulate network delay
-setTimeout(() => {
-// Update stats with random numbers
-document.getElementById('stat-orders').innerText = (Math.floor(Math.random() * 500) + 1000).toLocaleString();
-document.getElementById('stat-users').innerText = Math.floor(Math.random() * 200) + 300;
-document.getElementById('stat-performance').innerText = (90 + Math.random() * 9).toFixed(1) + '%';
-​// Restore button and show success
-spinner.classList.add('hidden');
-btn.classList.remove('opacity-75');
-btn.disabled = false;
-btnText.innerText = "تحديث البيانات الآن";
-output.classList.remove('hidden');
-}, 1500);
-}
-</script>
+
 </body>
 </html>
+
